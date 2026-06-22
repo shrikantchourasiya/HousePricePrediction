@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, jsonify
 import pandas as pd
 import pickle
 import os
+import requests
 
 app = Flask(__name__)
 
@@ -12,10 +13,23 @@ app.jinja_env.auto_reload = True
 # Load dataset
 df = pd.read_csv('location.csv')
 
-# Model path
-MODEL_PATH = os.path.join(os.path.dirname(__file__), "Nofeature.pkl")
+# -------------------- Download model from Hugging Face --------------------
+MODEL_PATH = "Nofeature.pkl"
 
-# Load model safely
+if not os.path.exists(MODEL_PATH):
+    print("Downloading model from Hugging Face...")
+
+    url = "https://huggingface.co/Shriindian12/house-price-model/resolve/main/Nofeature.pkl"
+
+    r = requests.get(url)
+
+    with open(MODEL_PATH, "wb") as f:
+        f.write(r.content)
+
+    print("Model downloaded.")
+# --------------------------------------------------------------------------
+
+# Load model
 pipe = None
 try:
     with open(MODEL_PATH, "rb") as f:
