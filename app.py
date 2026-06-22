@@ -1,62 +1,76 @@
-from flask import Flask,render_template,request, jsonify
+from flask import Flask, render_template, request, jsonify
 import pandas as pd
 import pickle
+import os
 
 app = Flask(__name__)
+
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.jinja_env.auto_reload = True
 
-df=pd.read_csv('location.csv')
+# Load dataset
+df = pd.read_csv('location.csv')
+
+# Model path
+MODEL_PATH = os.path.join(os.path.dirname(__file__), "Nofeature.pkl")
+
+# Load model safely
 pipe = None
+try:
+    with open(MODEL_PATH, "rb") as f:
+        pipe = pickle.load(f)
+    print("Model loaded successfully.")
+except Exception as e:
+    print("Model load error:", e)
 
-@app.route('/', methods=['GET', 'POST']) 
 
+@app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        # Get the selected city from the form
-        city = request.form['city']
-        # Get a list of locations for the selected city
+        city = request.form.get('city')
         locations = df[df['City'] == city]['Location'].tolist()
-        # Return the locations as a JSON response
         return jsonify(locations)
-    else:
-        # Get a list of all the cities
-        cities = df['City'].unique().tolist()
-        locations = []
-        return render_template('index.html', cities=cities, locations=locations)
+
+    cities = df['City'].unique().tolist()
+    return render_template('index.html', cities=cities, locations=[])
 
 
-@app.route('/predict',methods=['POST'])
+@app.route('/predict', methods=['POST'])
 def predict():
-    global pipe
-    # Ensure model is loaded (lazy load to pick up updated pickle)
+
     if pipe is None:
-        try:
-            pipe = pickle.load(open('Nofeature.pkl','rb'))
-        except Exception as e:
-            return str(e), 500
+        return "Model file is missing or corrupted.", 500
 
-    location=request.form.get('location')
-    try:
-        area=float(request.form.get('Area'))
-        Bedrooms=int(request.form.get('Bedrooms'))
-    except Exception as e:
-        return f'Invalid input: {e}', 400
-    Resale=request.form.get('Re-sale')
-    if Resale=='Yes':
-        Resale=1
-    else:
-        Resale=0
+    location = request.form.get('location')
+    area_val = request.form.get('Area')
+    bed_val = request.form.get('Bedrooms')
+    resale_val = request.form.get('Re-sale', 'No')
 
-    input=pd.DataFrame([[location, area, Bedrooms, Resale]],columns=['Location','Area', 'No_of_Bedrooms', 'Resale'])
+    # Validation
+    if not location or not area_val or not bed_val:
+        return "Please fill all fields.", 400
+
     try:
-        prediction=round(pipe.predict(input)[0],2)
-        return str(prediction)
+        area = float(area_val)
+        bedrooms = int(bed_val)
+    except ValueError:
+        return "Invalid numeric input.", 400
+
+    resale = 1 if resale_val == "Yes" else 0
+
+    input_df = pd.DataFrame(
+        [[location, area, bedrooms, resale]],
+        columns=['Location', 'Area', 'No_of_Bedrooms', 'Resale']
+    )
+
+    try:
+        prediction = round(pipe.predict(input_df)[0], 2)
+        return jsonify({"prediction": prediction})
     except Exception as e:
         return str(e), 500
 
-if __name__=="__main__":
-    app.run(debug=True,port=5001)
 
-
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=True)
