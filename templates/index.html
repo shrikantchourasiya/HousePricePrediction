@@ -18,7 +18,7 @@
 
         <title>House Price Prediction</title>
     </head>
-    <body>
+    <body class="dark-theme">
         <header class="header" id="header">
             <nav class="nav container">
                 <a href="#" class="nav__logo">Sales</a>
@@ -29,10 +29,10 @@
                             <a href="#home" class="nav__link active-link">Home</a>
                         </li>
                         <li class="nav__item">
-                            <a href="#about" class="nav__link">About</a>
+                            <a href="#discover" class="nav__link">Discover</a>
                         </li>
                         <li class="nav__item">
-                            <a href="#discover" class="nav__link">Discover</a>
+                            <a href="#about" class="nav__link">About</a>
                         </li>
                         
                     </ul>
@@ -107,102 +107,115 @@
             
            
               <!--==================== VIDEO ====================-->
-              <section class="video section" id="Discover">
-                <h2 class="section__title"><u>Welcome to House Price Predictor</u> </h2>
+              <section class="video section" id="discover">
+                <h2 class="section__title" style="margin-bottom: 5px;"><u>Welcome to House Price Predictor</u> </h2>
 
                 <div class="video__container container">
-                    
-                      
-                      
                     <div class="video__content">
                         <section id="search-section" class="my-5">
-                        <form method="post" accept-charset="utf-8">
-                            <div class="container">
-                            <div class="col-md-11 mx-auto search-area shadow">
-                       
-                    
-
-                            <div class="container">
-                                <div class="row">
-                                    <div class="card mt-50" style="width: 100%; height: 100%">
-                                        
-                                        <div class="card-body">
-                                            <div class="col-12" style="text-align: center">
-                                                <h5>This app predicts the price of a House you want to sell or Buy. Try filling the details below: </h5>
-                                            </div>
-                                            <br>
-                                            <form method="post" accept-charset="utf-8" name="Modelform" action="{{ url_for('index') }}">
-                                                <div class="col-md-10 form-group" style="text-align: center">
-                                                    <label for="city"><b>Select a city:</b> </label><br>
-                                                    <select class="selectpicker form-control" id="city" name="city" onchange="updateLocations()">
-                                                        {% if request.method == 'GET' %}
-                                                            <option value="" disabled selected>Please select a city</option>
-                                                        {% endif %}
-                                                        {% for city in cities %}
-                                                            {% if request.form.city == city %}
-                                                                <option value="{{ city }}" selected>{{ city }}</option>
-                                                            {% else %}
-                                                                <option value="{{ city }}">{{ city }}</option>
-                                                            {% endif %}
-                                                        {% endfor %}
+                            <div class="search-area">
+                                <div class="search-card">
+                                    <div class="search-card-head">
+                                        <h5>This app predicts the price of a House you want to sell or Buy. Try filling the details below:</h5>
+                                    </div>
+                                    <form id="prediction-form" method="post" accept-charset="utf-8" name="Modelform" action="{{ url_for('index') }}">
+                                        <div class="search-field">
+                                            <label for="city"><b>Select a city:</b></label>
+                                            <select class="form-control" id="city" name="city" onchange="updateLocations()">
+                                                {% if request.method == 'GET' %}
+                                                    <option value="" disabled selected>Please select a city</option>
+                                                {% endif %}
+                                                {% for city in cities %}
+                                                    {% if request.form.city == city %}
+                                                        <option value="{{ city }}" selected>{{ city }}</option>
+                                                    {% else %}
+                                                        <option value="{{ city }}">{{ city }}</option>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="search-field">
+                                            <label for="location"><b>Select a location:</b></label>
+                                            <select class="form-control" id="locations" name="location" required="1" placeholder="Select the Location">
+                                                <option value="" disabled selected>Please select a location</option>
+                                                {% for location in locations %}
+                                                    <option value="{{ location }}">{{ location }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="search-field">
+                                            <label><b>Select the No. Of Bedrooms</b></label>
+                                            <select class="form-control" id="Bedrooms" name="Bedrooms" required="1" placeholder="Select the No. Of Bedrooms">
+                                                <option>1</option>
+                                                <option>2</option>
+                                                <option>3</option>
+                                                <option>4</option>
+                                            </select>
+                                        </div>
+                                        <div class="search-field">
+                                            <label><b>Re-sale:</b></label>
+                                            <select class="form-control" id="Re-sale" name="Re-sale" required="1">
+                                                <option>No</option>
+                                                <option>Yes</option>
+                                            </select>
+                                        </div>
+                                        <div class="search-field">
+                                            <label><b>Enter the Area:</b></label>
+                                            <input type="text" class="form-control" id="Area" name="Area" placeholder="Enter the Area(in sqft)" required="1">
+                                        </div>
+                                        <div class="search-field search-checkbox">
+                                            <label class="form-check-label" for="toggle-features">
+                                                <input type="checkbox" id="toggle-features" onclick="toggleOtherFeatures()">Choose Other Features
+                                            </label>
+                                        </div>
+                                        <div class="search-field other-features hidden" id="other-features-container">
+                                            <div class="feature-grid">
+                                                <div>
+                                                    <label for="age"><b>Age of Property:</b></label>
+                                                    <select class="form-control" id="age" name="age">
+                                                        <option value="" disabled selected>Select age</option>
+                                                        <option>0-1 years</option>
+                                                        <option>1-5 years</option>
+                                                        <option>5-10 years</option>
+                                                        <option>10+ years</option>
                                                     </select>
                                                 </div>
-                                                <div class="col-md-10 form-group" style="text-align: center" >
-                                                    <label for="location"><b>Select a location:</b> </label><br>
-                                                    <select class="selectpicker form-control" id="locations" name="location" required="1" placeholder="Select the Location">
-                                                        <option value="" disabled selected>Please select a location</option>
-                                                        {% for location in locations %}
-                                                            <option value="{{ location }}">{{ location }}</option>
-                                                        {% endfor %}
-                                                    </select>
-                                                </div>
-                                                <div class="col-md-10 form-group" style="text-align: center">
-                                                    <label><b>Select the No. Of Bedrooms</b> </label><br>
-                                                    <select class="selectpicker form-control" id="Bedrooms" name="Bedrooms" required="1" placeholder="Select the No. Of Bedrooms">
+                                                <div>
+                                                    <label for="floor"><b>Floor Number:</b></label>
+                                                    <select class="form-control" id="floor" name="floor">
+                                                        <option value="" disabled selected>Select floor</option>
+                                                        <option>Ground</option>
                                                         <option>1</option>
                                                         <option>2</option>
-                                                        <option>3</option>
-                                                        <option>4</option>
+                                                        <option>3+</option>
                                                     </select>
-                                                </div>
-                                                <div class="col-md-10 form-group" style="text-align: center">
-                                                    <label><b>Re-sale:</b> </label><br>
-                                                    <select class="selectpicker form-control" id="Re-sale" name="Re-sale" required="1">
-                                                        <option>No</option>
-                                                        <option>Yes</option>
-                                                    </select>
-                                                </div>
-                                                <div class="col-md-10 form-group" style="text-align: center">
-                                                    <label><b>Enter the Area:</b> </label><br>
-                                                    <input type="text" class="form-control" id="Area" name="Area"
-                                                           placeholder="Enter the Area(in sqft)" required="1">
-                                                </div>
-                                                <div class="col-md-10 form-group" style="text-align: center">
-                                                    <button  class="btne btne-theme1-2 form-control" onclick="send_data()">Predict Price</button>
-                                                </div>
-                                            </form>
-                                            <br>
-                                            <br>
-                                            <div class="row">
-                                                
-                                                <div class="col-12" style="text-align: center">
-                                                    <h4><span id="prediction"></span></h4>
                                                 </div>
                                             </div>
+                                            <div class="feature-checkboxes">
+                                                <label><input type="checkbox" name="parking"> Parking</label>
+                                                <label><input type="checkbox" name="lift"> Lift</label>
+                                                <label><input type="checkbox" name="balcony"> Balcony</label>
+                                            </div>
                                         </div>
+                                        <div class="search-field">
+                                            <button type="button" class="btne btne-theme1-2" onclick="send_data()">Predict Price</button>
+                                        </div>
+                                    </form>
+                                    <div class="search-images">
+                                        <img src="static/img/home1.webp" alt="House 1">
+                                        <img src="static/img/home2.webp" alt="House 2">
+                                    </div>
+                                    <div class="search-result">
+                                        <h4><span id="prediction"></span></h4>
                                     </div>
                                 </div>
                             </div>
-
-                            </section>
-                        <video id="video-file">
-                          
-                        </video>
-                      
-                        <button class="button button--flex video__button" id="video-button">
-                            
-                        </button>
+                        </section>
                     </div>
+                        <video id="video-file"></video>
+                        <button class="button button--flex video__button" id="video-button">
+                            <i id="video-icon" class="ri-play-line"></i>
+                        </button>
                 </div>
             </section>
           
@@ -267,19 +280,18 @@
             
             
           
+        </main>
 
         <!--==================== FOOTER ====================-->
-        
-
+        <footer class="footer section">
                 <div class="footer__rights">
-                    <p class="footer__copy">&#169; 2022 House Price Prediction a end-to-end ML project. Front-end designed by Princika and Back-end by Prafull.</p>
+                    <p class="footer__copy">&#169; 2022 House Price Prediction a end-to-end ML project. Front-end designed by Shrikant.</p>
                     <div class="footer__terms">
                         <a href="#" class="footer__terms-link">Terms & Agreements</a>
                         <a href="#" class="footer__terms-link">Privacy Policy</a>
                         <a href="#" class="footer__terms-link"></a>
                     </div>
                 </div>
-            </div>
         </footer>
 
 
@@ -289,25 +301,19 @@
         </a>
         <script>
 
-            function form_handler(event) {
-                   event.preventDefault(); // Don't submit the form normally
-            }
             function send_data(){
-                document.querySelector('form').addEventListener("submit",form_handler);
-                var fd=new FormData(document.querySelector('form'));
-                var xhr= new XMLHttpRequest({mozSystem: true});
-                xhr.open('POST','/predict',true);
+                var form = document.getElementById('prediction-form');
+                var fd = new FormData(form);
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST','{{ url_for('predict') }}',true);
                 document.getElementById('prediction').innerHTML="Wait! Predicting Price.....";
                 xhr.onreadystatechange = function(){
                     if(xhr.readyState == XMLHttpRequest.DONE){
                         document.getElementById('prediction').innerHTML="Prediction: ₹"+xhr.responseText;
                     }
                 };
-                xhr.onload= function(){};
-
-                 xhr.send(fd);
-
-            }  
+                xhr.send(fd);
+            }
 
             function updateLocations() {
                 // Get the selected city
@@ -332,6 +338,12 @@
                 xhttp.open("POST", "{{ url_for('index') }}", true);
                 xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
                 xhttp.send("city=" + city);
+            }
+
+            function toggleOtherFeatures() {
+                var container = document.getElementById('other-features-container');
+                if (!container) return;
+                container.classList.toggle('hidden');
             }
 
 

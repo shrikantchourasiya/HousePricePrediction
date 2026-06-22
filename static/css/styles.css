@@ -180,13 +180,79 @@ input {
 
 .container {
   max-width: 968px;
-  margin-left: var(--mb-1);
-  margin-right: var(--mb-1);
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  padding-left: var(--mb-1);
+  padding-right: var(--mb-1);
 }
 
-.grid {
-  display: grid;
-  gap: 1.5rem;
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: -0.75rem;
+  margin-right: -0.75rem;
+}
+
+.col-md-10,
+.col-12,
+.col-5 {
+  width: 100%;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+.card {
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.04);
+  border-radius: 1.75rem;
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.32);
+  overflow: hidden;
+}
+
+.card-body {
+  padding: 2rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 1rem;
+  padding: 0.95rem 1rem;
+  min-height: 50px;
+  box-sizing: border-box;
+}
+
+.form-control:focus,
+#search-section .search-area select:focus {
+  outline: none;
+  border-color: rgba(0, 204, 255, 0.75);
+  box-shadow: 0 0 0 2px rgba(0, 204, 255, 0.14);
+}
+
+.btne.btne-theme1-2 {
+  width: auto;
+}
+
+input::placeholder {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+#search-section .search-area {
+  width: 100%;
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+#search-section .search-area img {
+  max-width: 100%;
 }
 
 /*=============== HEADER ===============*/
@@ -548,7 +614,19 @@ input {
 
 /*=============== VIDEO ===============*/
 .video__container {
-  padding-bottom: 1rem;
+  padding: 2rem 1rem 2rem;
+  background: linear-gradient(180deg, rgba(3,17,24,.95) 0%, rgba(3,17,24,.9) 100%);
+  border-radius: 2rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+
+section.video {
+  background: #061216;
+  padding: 4rem 0 3rem;
+}
+
+section.video .section__title {
+  color: #ffffff;
 }
 
 .video__description {
@@ -558,7 +636,10 @@ input {
 
 .video__content {
   position: relative;
-  
+  background: rgba(255, 255, 255, 0.04);
+  padding: 2rem;
+  border-radius: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .video__button {
@@ -566,7 +647,7 @@ input {
   right: 0;
   bottom: 0;
   padding: 1rem 1.5rem;
-  visibility: hidden;
+  visibility: visible;
 }
 
 .video__button-icon {
@@ -1050,22 +1131,62 @@ input {
 
 /*SEARCH SECTION*/
 #search-section .search-area{
-  border-radius: 80px;
-  padding: 15px 50px ;
+  border-radius: 2rem;
+  padding: 2rem 2.25rem;
   font-family: var(--font-poppin);
+  background: rgba(8, 26, 34, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.25);
 }
 
-#search-section .search-area select{
-  border: none;
-  padding:5px;
-  outline: none;
-  width: 80%;
-  margin-bottom: 3px;
-}
-
+#search-section .search-area select,
 #search-section .search-area input{
-  border:1px solid #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 12px 14px;
   outline: none;
+  width: 100%;
+  margin-bottom: 1rem;
+  border-radius: 12px;
+  background-color: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
+  min-height: 48px;
+}
+
+#search-section .search-area select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-color: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+#search-section .search-area select option,
+#search-section .search-area select option:hover,
+#search-section .search-area select option:checked,
+#search-section .search-area select option:focus {
+  background-color: #071017 !important;
+  color: #ffffff !important;
+}
+
+#search-section .search-area label,
+#search-section .search-area .form-check-label {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+#search-section .search-area select option,
+#search-section .search-area input::placeholder {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+#search-section .search-area img {
+  display: block;
+  margin: 0 auto;
+}
+
+#search-section .search-area input:focus,
+#search-section .search-area select:focus{
+  border-color: rgba(0, 204, 255, 0.75);
+  box-shadow: 0 0 0 3px rgba(0, 204, 255, 0.1);
 }
 
 #search-section .search-area input:focus{
@@ -1078,6 +1199,129 @@ input {
   border-radius: 30px;
   padding: 12px 40px;
 }
+
+#search-section .search-card {
+  display: grid;
+  gap: 1.5rem;
+}
+
+#search-section .search-card-head {
+  text-align: center;
+  color: #ffffff;
+}
+
+#search-section .search-field {
+  display: grid;
+  gap: 0.5rem;
+}
+
+#search-section .search-field label {
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 600;
+  text-align: left;
+}
+
+#search-section .search-checkbox {
+  justify-items: center;
+  text-align: center;
+}
+
+#search-section .search-checkbox input {
+  margin-right: 0.75rem;
+}
+
+#search-section .search-images {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+#search-section .search-images img {
+  width: 100%;
+  max-width: 220px;
+  border-radius: 1rem;
+  object-fit: cover;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.25);
+}
+
+#search-section .search-result {
+  text-align: center;
+  color: #ffffff;
+  min-height: 3rem;
+}
+
+#search-section .form-control {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 0.75rem;
+  padding: 0.85rem 1rem;
+  min-height: 3rem;
+}
+
+#search-section .form-control option {
+  color: #000000;
+  background: #ffffff;
+}
+
+#search-section .search-checkbox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#search-section .search-checkbox input {
+  margin-right: 0.75rem;
+}
+
+#search-section .other-features {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+#search-section .other-features.hidden {
+  display: none;
+}
+
+#search-section .feature-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+#search-section .feature-checkboxes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+#search-section .feature-checkboxes label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+#search-section .feature-checkboxes input {
+  width: 1rem;
+  height: 1rem;
+}
+
+#search-section .btne-theme1-2 {
+  width: 100%;
+}
+
+#search-section .search-area {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
 .btne-theme1{
   box-shadow: none;
   margin: 0;

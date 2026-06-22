@@ -3,11 +3,14 @@ import pandas as pd
 import pickle
 
 app = Flask(__name__)
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
+app.config['TEMPLATES_AUTO_RELOAD'] = True
+app.jinja_env.auto_reload = True
 
 df=pd.read_csv('location.csv')
-pipe=pickle.load(open('Nofeature.pkl','rb'))
+pipe = None
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST']) 
 
 def index():
     if request.method == 'POST':
@@ -26,19 +29,34 @@ def index():
 
 @app.route('/predict',methods=['POST'])
 def predict():
+    global pipe
+    # Ensure model is loaded (lazy load to pick up updated pickle)
+    if pipe is None:
+        try:
+            pipe = pickle.load(open('Nofeature.pkl','rb'))
+        except Exception as e:
+            return str(e), 500
+
     location=request.form.get('location')
-    area=float(request.form.get('Area'))
-    Bedrooms=int(request.form.get('Bedrooms'))
+    try:
+        area=float(request.form.get('Area'))
+        Bedrooms=int(request.form.get('Bedrooms'))
+    except Exception as e:
+        return f'Invalid input: {e}', 400
     Resale=request.form.get('Re-sale')
     if Resale=='Yes':
         Resale=1
     else:
         Resale=0
-    
-    input=pd.DataFrame([[area,location,Bedrooms,Resale]],columns=['Area', 'Location', 'No_of_Bedrooms', 'Resale'])
-    prediction=round(pipe.predict(input)[0],2)
-    return str(prediction)
+
+    input=pd.DataFrame([[location, area, Bedrooms, Resale]],columns=['Location','Area', 'No_of_Bedrooms', 'Resale'])
+    try:
+        prediction=round(pipe.predict(input)[0],2)
+        return str(prediction)
+    except Exception as e:
+        return str(e), 500
 
 if __name__=="__main__":
     app.run(debug=True,port=5001)
+
 
