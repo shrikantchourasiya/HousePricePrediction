@@ -302,18 +302,32 @@
         <script>
 
             function send_data(){
-                var form = document.getElementById('prediction-form');
-                var fd = new FormData(form);
-                var xhr = new XMLHttpRequest();
-                xhr.open('POST','{{ url_for('predict') }}',true);
-                document.getElementById('prediction').innerHTML="Wait! Predicting Price.....";
-                xhr.onreadystatechange = function(){
-                    if(xhr.readyState == XMLHttpRequest.DONE){
-                        document.getElementById('prediction').innerHTML="Prediction: ₹"+xhr.responseText;
-                    }
-                };
-                xhr.send(fd);
+    var form = document.getElementById('prediction-form');
+    var fd = new FormData(form);
+    var xhr = new XMLHttpRequest();
+
+    xhr.open('POST','{{ url_for('predict') }}',true);
+
+    document.getElementById('prediction').innerHTML = "Wait! Predicting Price.....";
+
+    xhr.onreadystatechange = function(){
+        if(xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200){
+
+            try {
+                let data = JSON.parse(xhr.responseText);
+                document.getElementById('prediction').innerHTML =
+                    "Prediction: ₹ " + data.prediction;
+            } 
+            catch (e) {
+                document.getElementById('prediction').innerHTML =
+                    "Prediction: ₹ " + xhr.responseText;
             }
+
+        }
+    };
+
+    xhr.send(fd);
+}
 
             function updateLocations() {
                 // Get the selected city
@@ -357,5 +371,5 @@
 
         <!--=============== MAIN JS ===============-->
         <script src="static/js/main.js"></script>
-    </body>
+    </body> 
 </html>
